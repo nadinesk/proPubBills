@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n\n#' Gets the bills depending on congress, branch, and offsets\n#' key is the api key\n#' congress it the number of the congress\n#' branch is the House or the Senate branch\n#' numFrom is the offset number from\n#' numTo is the offset number to\n#' @author Nadine Fischoff, \\email{nadine.khattak@@gmail.com}\n#' @references \\url{https://projects.propublica.org/api-docs/congress-api/}\n#' @keywords propublica, api, congress, bills\n#' @import httr\n\n\ngetBills <- function(key, congress,branch,type,numFrom, numTo) {\n\n  get_url <- paste('https://api.propublica.org/congress/v1/',congress, '/',branch,'/bills/',type,'.json', sep=\"\" )\n\n  listofdfs <- list()\n  x=c()\n\n  first_20 <-  GET(get_url,\n                   add_headers(`X-API-Key` = key))\n\n  ft_pr <- content(first_20, 'parsed')\n  ft_res1 <- ft_pr$results\n  ft_res2 <- ft_res1[[1]]\n  ft_res3 <- ft_res2$bills\n\n  ft_res4 <- data.frame(do.call(rbind, ft_res3), stringsAsFactors=FALSE)\n\n  for(i in numFrom:numTo) {\n\n    if ((i %% 20) ==0) {\n\n      url <- paste(get_url,'?offset=', i,sep=\"\")\n      r <- GET(url,\n               add_headers(`X-API-Key` = key))\n      pr <- content(r, 'parsed')\n      t1 <- pr$results\n      t2 <- t1[[1]]\n      t3 <- t2$bills\n\n      listofdfs[[i]] <- t3\n\n      df_name <- paste(\"df\", i, sep=\"_\")\n      assign(df_name,listofdfs[[i]])\n\n      df1_name <- paste(\"df1\", i, sep=\"_\")\n\n      assign(df1_name, data.frame(do.call(rbind, listofdfs[[i]]), stringsAsFactors=FALSE))\n\n      x=append(x,df1_name)\n    }\n  }\n  x1 <- do.call(rbind, mget(x))\n\n  x2 <- rbind(ft_res4,x1)\n  x3 <- lapply(x2, function(x) ifelse(x==\"NULL\", NA, x))\n\n  x4 <- lapply(x3, function(x) as.character((unlist(x))))\n\n  x5 <- as.data.frame(do.call(cbind, x4))\n\n  return(x5)\n}\n\n",
+    "created" : 1510789131250.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "524583365",
+    "id" : "C4C0DC6F",
+    "lastKnownWriteTime" : 1510791435,
+    "last_content_update" : 1510791435123,
+    "path" : "~/Desktop/proPubBills/R/cbills.R",
+    "project_path" : "R/cbills.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
