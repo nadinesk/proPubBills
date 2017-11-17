@@ -1,18 +1,26 @@
 
-
-#' Gets the bills depending on congress, branch, and offsets
-#' key is the api key
-#' congress it the number of the congress
-#' branch is the House or the Senate branch
-#' numFrom is the offset number from
-#' numTo is the offset number to
+#' Gets the bills depending on U.S.Congress, branch, and offsets
+#' @param key is the api key
+#' @param congress it the number of the U.S. Congress: for example, 114 for the 114th U.S. Congress
+#' @param branch is the House or the Senate branch
+#' @param type is the type of bills; options are introduced, updated, active, passed, enacted, vetoed
+#' @param numFrom is the offset number beginning range: for example, 1 will get the first 20 bills
+#' @param numTo is the offset number to: for example, 40 will get bills 40 to 60. Entering numFrom as 1 and numTo as 40 will return bills 1 to 60
+#' @return returns a dataframe with all bills and info from the API within the arguments' parameters
+#' @examples
+#' \dontrun{
+#' congress_115_enacted <- getBills(api_key,"115","house","enacted",1,500)
+#' congress_114_introduced <- getBills(api_key,"114","senate","introduced",1,100)
+#' }
 #' @author Nadine Fischoff, \email{nadine.khattak@@gmail.com}
+#' @export 
 #' @references \url{https://projects.propublica.org/api-docs/congress-api/}
 #' @keywords propublica, api, congress, bills
-#' @import httr
+#' @import httr dplyr stringr
 
 
-getBills <- function(key, congress,branch,type,numFrom, numTo) {
+
+getBills <- function(key,congress,branch,type,numFrom, numTo) {
 
   get_url <- paste('https://api.propublica.org/congress/v1/',congress, '/',branch,'/bills/',type,'.json', sep="" )
 

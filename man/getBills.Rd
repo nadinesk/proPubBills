@@ -2,22 +2,34 @@
 % Please edit documentation in R/cbills.R
 \name{getBills}
 \alias{getBills}
-\title{Gets the bills depending on congress, branch, and offsets
-key is the api key
-congress it the number of the congress
-branch is the House or the Senate branch
-numFrom is the offset number from
-numTo is the offset number to}
+\title{Gets the bills depending on U.S.Congress, branch, and offsets}
 \usage{
 getBills(key, congress, branch, type, numFrom, numTo)
 }
+\arguments{
+\item{key}{is the api key}
+
+\item{congress}{it the number of the U.S. Congress: for example, 114 for the 114th U.S. Congress}
+
+\item{branch}{is the House or the Senate branch}
+
+\item{type}{is the type of bills; options are introduced, updated, active, passed, enacted, vetoed}
+
+\item{numFrom}{is the offset number beginning range: for example, 1 will get the first 20 bills}
+
+\item{numTo}{is the offset number to: for example, 40 will get bills 40 to 60. Entering numFrom as 1 and numTo as 40 will return bills 1 to 60}
+}
+\value{
+returns a dataframe with all bills and info from the API within the arguments' parameters
+}
 \description{
-Gets the bills depending on congress, branch, and offsets
-key is the api key
-congress it the number of the congress
-branch is the House or the Senate branch
-numFrom is the offset number from
-numTo is the offset number to
+Gets the bills depending on U.S.Congress, branch, and offsets
+}
+\examples{
+\dontrun{
+congress_115_enacted <- getBills(api_key,"115","house","enacted",1,500)
+congress_114_introduced <- getBills(api_key,"114","senate","introduced",1,100)
+}
 }
 \references{
 \url{https://projects.propublica.org/api-docs/congress-api/}
